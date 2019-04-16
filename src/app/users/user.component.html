@@ -1,0 +1,109 @@
+<div class="action-container d-flex">
+  <div class="w-25 d-flex align-items-center">
+    <div class="d-flex align-items-center star">
+      <img src="../../assets/img/star.svg" alt="star" class="icon" />
+    </div>
+    <div class="team-conut">
+      <div class="title">Team members ({{users.length}})</div>
+      <div class="description">Netguru</div>
+    </div>
+  </div>
+  <div class="w-50 text-center">
+    <div class="d-flex align-items-center h-100 tabs">
+      <div class="tab" [ngClass]="activeTab === 'All members' ? 'active' : ''" (click)="setActiveTab('All members')">
+        All members
+      </div>
+      <div class="tab" [ngClass]="activeTab === 'My team' ? 'active' : ''" (click)="setActiveTab('My team')">
+        My team
+      </div>
+    </div>
+  </div>
+  <div class="w-25">
+
+  </div>
+</div>
+
+<div *ngIf="activeTab === 'All members'" class="user-list">
+    <div *ngFor="let user of users; let i = index" class="card">
+      <div class="d-flex align-items-center justify-content-center user-card">
+          <div class="text-center w-100 user-info">
+            <img *ngIf="user.avatar" src={{user.avatar}} alt="user-logo" class="user-icon"/>
+            <div *ngIf="!user.avatar" class="text-center d-flex align-items-center justify-content-center">
+              <div class="d-flex align-items-center justify-content-center user-icon non-user-icon">{{user.name.charAt(0).toUpperCase()}}</div>
+            </div>
+            <div class="outer-circle">
+              <div class="inner-circle"></div>
+            </div>
+            <div class="text-center name">{{user.name}}</div>
+            <div class="company-name">@{{user.company}}</div>
+            <div class="d-flex align-items-center justify-content-center user-actions">
+              <img src="../../assets/img/edit.svg" class="icon user-action" alt="edit" (click)="onClickProfile(user)" />
+              <img *ngIf="i !== 0" src="../../assets/img/notification-grey.svg" class="icon user-action" alt="notification" />
+              <img *ngIf="i === 0" src="../../assets/img/notification-blue.svg" class="icon user-action" alt="notification" />
+              <img src="../../assets/img/trash.svg" class="icon user-action" alt="delete" (click)="onClickDeleteMember(user)"/>
+            </div>
+        </div>
+      </div>
+      <div class="w-100 d-flex status">
+        <div class="w-50 chart">
+          <!-- chart -->
+        </div>
+        <div class="w-50 open-task text-center">
+          <div class="open-task-count">{{user.openTasks}}</div>
+          <div>Open Tasks</div>
+        </div>
+      </div>
+      <div class="w-100 d-flex profile-section">
+          <div class="w-50 d-flex align-items-center justify-content-center cards">
+            <img src="../../assets/img/grid-layout.svg" alt="user-icon" class="icon" />
+            CARDS
+          </div>
+          <div class="w-50 d-flex align-items-center justify-content-center profile" (click)="onClickProfile(user)">
+            <img src="../../assets/img/user.svg" alt="user-icon" class="icon" />
+            <div>PROFILE</div>
+          </div>
+        </div>
+    </div>
+  <div class="create-user-card d-flex align-items-center justify-content-center" (click)="onClickAddNewMember()">
+    <div class="text-center">
+      <img src="../../assets/img/add-user.svg" alt="add-user" class="add-user"/>
+      <div class="add-user-text">Add members to the team</div>
+    </div>
+    <div class="add-user-icon d-flex align-items-center justify-content-center">
+      <img src="../../assets//img/add.svg" alt="add-user" class="icon" />
+    </div>
+  </div>
+</div>
+
+<div *ngIf="isModalOpen" class="modal">
+  <div class="modal-container">
+    <div class="modal-header">
+      <span>{{modalTitle}}</span>
+      <div class="close-icon" (click)="onClickClose()">X</div>
+    </div>
+    <div class="modal-body">
+      <div *ngIf="actionBtn !== 'Delete'">
+        <div class="form-input">
+          <div class="label">Name</div>
+          <input name="" type="text" (change)="onChangeInput('name', $event)" value="{{selectedUser.name}}"/>
+        </div>
+        <div class="form-input">
+          <div class="label">Company name</div>
+          <input name="" type="text" (change)="onChangeInput('company', $event)" value="{{selectedUser.company}}"/>
+        </div>
+        <div class="form-input">
+          <div class="label">Open Tasks</div>
+          <input name="" type="number" (change)="onChangeInput('openTasks', $event)" value="{{selectedUser.openTasks}}"/>
+        </div>
+      </div>
+      <div *ngIf="actionBtn === 'Delete'">
+        <div>Confirm to delete this member ? </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="border-btn" (click)="onClickClose()">Cancel</button>
+      <button *ngIf="actionBtn !== 'Delete'" class="bg-btn" (click)="onSaveOrUpdateMember()">{{actionBtn}}</button>
+      <button *ngIf="actionBtn === 'Delete'" class="bg-btn" (click)="onDeleteUser()">{{actionBtn}}</button>
+    </div>
+  </div>
+</div>
